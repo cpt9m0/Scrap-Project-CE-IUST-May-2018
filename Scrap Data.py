@@ -2,7 +2,7 @@
 # Developer --> Ali78_CE
 
 # import libraries
-import urllib2, os, time
+import urllib2, os, time, sys
 from bs4 import BeautifulSoup
 # Specify the URL
 global MyURL
@@ -19,9 +19,14 @@ def get_first_info(URL):
 	app_links = []
 	app_images_src = []
 	# Query the website and return the HTML to the variable HTML
-	HTML = urllib2.urlopen(URL)
-	# Parse the html using beautiful soup and store in variable SOUP
-	SOUP = BeautifulSoup(HTML, 'html.parser')
+	try:
+		HTML = urllib2.urlopen(URL)
+		# Parse the html using beautiful soup and store in variable SOUP
+		SOUP = BeautifulSoup(HTML, 'html.parser')
+	except:
+		print 'Please check your internet connection and try again...'
+		sys.exit()
+
 
 	# Take out app names
 	names = SOUP.findAll('div', attrs={'class':'msht-app-name'})
@@ -90,7 +95,7 @@ def get_second_info(AppUrl):
 	for detail in details:
 		element = str(detail.text.strip())
 		DetailsList.append(element)
-	
+
 	for element in range(len(DetailsList)):
 		if '+' in DetailsList[element]:
 			TestList.append(DetailsList[element-1])
@@ -103,7 +108,7 @@ def get_second_info(AppUrl):
 	AppDetails['active_installs'] = TestList[1]
 	AppDetails['size'] = TestList[2]
 	AppDetails['version'] = TestList[3]
-	
+
 	return AppDetails
 
 #print(get_second_info(APPURL))
