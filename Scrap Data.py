@@ -1,15 +1,10 @@
 # Scraping the data !
-# Developer --> Ali78_CE
+# Developer --> Ariya Ayati
 
 # import libraries
-import urllib2, os, time, sys
+print 'Getting ready, please wait...'
+import urllib2, os, time, sys, sqlite3
 from bs4 import BeautifulSoup
-# Specify the URL
-global MyURL
-MyURL = 'https://cafebazaar.ir'
-PAGE = 1
-URL = "https://cafebazaar.ir/lists/ml-best-new-action-games/?l=en&p=%s"%str(PAGE)
-Application = []
 
 def get_first_info(URL):
 	global MyURL
@@ -67,20 +62,6 @@ def print_(list_):
 		print i
 		print '\n'
 
-'''
-print ('app_names')
-print_(app_names)
-print ('app_prices')
-print_(app_prices)
-print ('app_links')
-print_(app_links)
-print ('app_ratings')
-print_(app_ratings)
-print ('app_images_src')
-print_(app_images_src)
-'''
-APPURL = 'https://cafebazaar.ir/app/com.craneballs.flingfighters/?l=en'
-
 def get_second_info(AppUrl):
 	DetailsList = []
 	TestList = []
@@ -111,16 +92,35 @@ def get_second_info(AppUrl):
 
 	return AppDetails
 
+# Specify the URL
+global MyURL
+MyURL = 'https://cafebazaar.ir'
+# APPURL = 'https://cafebazaar.ir/app/com.craneballs.flingfighters/?l=en'
+# Connect to Database
+MyDataBase = sqlite3.connect("AppDetails.db")
+cursor = MyDataBase.cursor()
 #print(get_second_info(APPURL))
+for PAGE in range(1, 20):
+	URL = "https://cafebazaar.ir/lists/ml-best-new-action-games/?l=en&p=%s"%str(PAGE)
+	app_names, app_prices, app_links, app_ratings, app_images_src = get_first_info(URL)
+	#print_(app_links)
+	print 'Getting data from [Page :%s], please wait... \n'%str(PAGE)
+	for i in range(24):
+		try:
+			print 'geting Application [%s] data'%i
+			dic1 = {'app_name':app_names[i], 'app_price':app_prices[i],'app_rating':app_ratings[i], 'app_image_src':app_images_src[i], 'app_link':app_links[i]}
+			dic2 = get_second_info(app_links[i])
+			dic1.update(dic2)
+			cursor.execute("""INSERT INTO Applications (AppLink, AppImageLink, AppName, AppPrice, AppRate, AppVersion, AppCategory, AppSize, AppActiveInstalls) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+				(dic1['app_link'], dic1['app_image_src'], dic1['app_name'], dic1['app_price'], dic1['app_rating'], dic1['version'], dic1['category'], dic1['size'], dic1['active_installs']))
+			MyDataBase.commit()
+			print 'Downloaded Data Saved \n'
+		except:
+			print 'Not enough data in this page'
+			MyDataBase.commit()
 
-app_names, app_prices, app_links, app_ratings, app_images_src = get_first_info(URL)
-#print_(app_links)
-print '[Page :%s] loading... \n'%str(PAGE)
-for i in range(24):
-	print 'geting Application [%s] data'%i
-	dic1 = {'app_name':app_names[i], 'app_price':app_prices[i],'app_rating':app_ratings[i], 'app_image_src':app_images_src[i], 'app_link':app_links[i]}
-	dic2 = get_second_info(app_links[i])
-	dic1.update(dic2)
-	Application.append(dic1)
-os.system('cls')
-print_(Application)
+print 'Closing Database...'
+try:
+	MyDataBase.close()
+except :
+	pass
