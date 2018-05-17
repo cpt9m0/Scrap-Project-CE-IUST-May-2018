@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		Scraping Data
+	</title>
+	<style type="text/css">
+		#welcome{
+			border-style: groove;
+			border-radius: 5px;
+			border-color: lightgreen;
+			color: blue;
+		}
+		input{
+			border-style: groove;
+			border-radius: 5px;
+			border-color: lightblue;	
+		}
+		table{
+			border-style: groove;
+			border-radius: 10px;
+			border-color: yellow;
+		}
+		#zoom{
+			zoom : 145%;
+		}
+		</style>
+</head>
+<body bgcolor="#F8BBD0" id="zoom">
+	<h3 id="welcome" align="center">Welcome to my web application !</h3>
+	<table align="center">
+		<tr>
+			<form action="/search-name" method="POST">
+				<th>
+					<label for="search by name">Search by application name : </label>
+				</th>
+				<th>
+					<input type="text" name="search by name" id="search by name">
+				</th>
+				<th>
+					<input type="submit" name="submit" id="submit-name" value="Search">	
+				</th>
+				
+			</form>		
+		</tr>
+		<tr>
+			<form action="search-category" method="POST">
+				<th>
+					<label for="search by cat">Search by application category : </label>
+				</th>
+				
+				<th>
+					<input type="text" name="search by cat" id="search by cat">
+				</th>
+
+				<th>
+					<input type="submit" name="submit" id="submit-cat" value="Search">
+				</th>
+			</form>		
+		</tr>
+		<tr>
+			<th>
+				<a href="/sort-by-size"><input type="submit" name="submit" id="submit-sort-size" value="Sort by size"></a>			
+			</th>
+
+			<th>
+				<a href="/sort-by-rate"><input type="submit" name="submit" id="submit-sort-rate" value="Sort by rate"></a>			
+			</th>
+
+			<br>
+
+			<th>
+				<a href="/show-all"><input type="submit" name="submit" id="submit-all" value="Show all"></a>				
+			</th>
+
+		</tr>
+	</table>
+	
+</body>
+</html>

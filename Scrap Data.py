@@ -27,13 +27,17 @@ def get_first_info(URL):
 	names = SOUP.findAll('div', attrs={'class':'msht-app-name'})
 	for name in names:
 		name = name.text.strip()
-		app_names.append(str(name))
+		try:
+			app_names.append(str(name))
+		except:
+			print ' Persian language not support !'
 
 	# Take out app ratings
 	ratings = SOUP.findAll('div', attrs={'class':'rating-fill'})
 	for rate in ratings:
 		rate = rate.get('style').replace('width:', '')
-		app_ratings.append(str(rate))
+		rate = rate.replace('%', '')
+		app_ratings.append(int(rate))
 
 	# Take out app prices
 	prices = SOUP.findAll('div', attrs={'class':'msht-app-price'})
@@ -100,7 +104,7 @@ MyURL = 'https://cafebazaar.ir'
 MyDataBase = sqlite3.connect("AppDetails.db")
 cursor = MyDataBase.cursor()
 #print(get_second_info(APPURL))
-for PAGE in range(1, 20):
+for PAGE in range(1, 200, 24):
 	URL = "https://cafebazaar.ir/lists/ml-best-new-action-games/?l=en&p=%s"%str(PAGE)
 	app_names, app_prices, app_links, app_ratings, app_images_src = get_first_info(URL)
 	#print_(app_links)
