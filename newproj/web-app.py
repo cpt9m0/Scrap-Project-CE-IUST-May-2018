@@ -6,12 +6,14 @@ try:
         conn = sqlite3.connect('AppDetails.db')
 except Error as e:
         print(e)
-global cur
+global cur, image_links
+image_links = []
 
 cur = conn.cursor()
 
 def all_apps():
 	# global cur, Applications
+	
 	Applications = []
 	AppNames = []
 	AppSizes = []
@@ -76,11 +78,13 @@ def sort_apps_by_size():
 	Applications = sorted(Applications,key=lambda l:l[1])
 	return Applications
 
-
 global list01, list02, list03
 list01 = all_apps()
 list02 = sort_apps_by_rate()
 list03 = sort_apps_by_size()
+
+for i in range(len(image_links)):
+	image_links[i] = image_links[i].replace('.png', '.webp')
 app = Flask(__name__)
 
 @app.route("/")
@@ -93,11 +97,11 @@ def show_all():
 
 @app.route('/sort-by-rate')
 def sort_by_rate():
-	return render_template("result.html", Apps = list02)
+	return render_template("result.html", Apps = list02 )
 
 @app.route('/sort-by-size')
 def sort_by_size():
-	return render_template("result.html", Apps = list03)
+	return render_template("result.html", Apps = list03 )
 
 @app.route('/search-name', methods = ['POST', 'GET'])
 def search_name():
@@ -111,7 +115,7 @@ def search_name():
 				if not (app in test):
 					test.append(app)
 
-		return render_template("result.html", Apps = test)
+		return render_template("result.html", Apps = test )
 
 @app.route('/search-category', methods = ['POST', 'GET'])
 def search_category():
@@ -125,7 +129,6 @@ def search_category():
 				if not(app in test):
 					test.append(app)
 		return render_template("result.html", Apps = test)
-
 
 if __name__ == '__main__':
    app.run(debug = True)

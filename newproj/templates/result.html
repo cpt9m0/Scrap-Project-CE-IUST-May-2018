@@ -34,15 +34,14 @@
          <th bgcolor="#B39DDB">App Category</th>
          <th bgcolor="#B39DDB">App ActiveInstalls</th>
       </tr>
-         {% for app in Apps %}
-         <tr>
-            {% for item in app %}
+            {% for app in Apps %}
+            <tr>
 
-               <th bgcolor="#D1C4E9" > {{ item }} </th>
-
-               {% endfor %}
-               </tr>
-         {% endfor %}
+               {% for item in app %}
+                  <th bgcolor="#D1C4E9" > {{ item }} </th>
+                  {% endfor %}
+                  </tr>
+            {% endfor %}
       </table>
 </body>
 </html>
